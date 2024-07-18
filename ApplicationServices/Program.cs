@@ -89,6 +89,8 @@ namespace ApplicationServices
                 });
             });
 
+            #endregion Krestel Configuration
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
