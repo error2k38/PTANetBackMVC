@@ -2,6 +2,8 @@ using ApplicationServices.Extensions;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Repository.Abstract.MBAbstract;
+using Repository.Concrete;
 using Repository.Context;
 
 namespace ApplicationServices
@@ -60,6 +62,14 @@ namespace ApplicationServices
 
 
             #endregion Database Configuration
+
+            #region Dependency Injection Configuration
+
+            // Add scoped services for repositories
+            builder.Services.AddScoped<IMbaRepository, ApplicationDBRepository>();
+            builder.Services.AddScoped<IMbaOptionsRepository, ApplicationDBRepository>();
+
+            #endregion Dependency Injection Configuration
 
             var app = builder.Build();
 
