@@ -1,7 +1,7 @@
 ﻿using Mappers.DTOs;
 using Domain.Entities;
 
-namespace ApplicationMappers.Mappers
+namespace Mapper.Mappers
 {
     /// <summary>
     /// Static class for mapping between <see cref="Mba"/> and <see cref="MbaOptions"/> objects.
