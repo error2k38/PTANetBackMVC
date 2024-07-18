@@ -91,6 +91,26 @@ namespace ApplicationServices
 
             #endregion Krestel Configuration
 
+            #region CORS Configuration
+
+            var MyAllowcOrigins = "_myAllowOrigins";
+
+            // Explicitly allow cross-origin requests
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy(name: MyAllowcOrigins,
+                                  policy =>
+                                  {
+                                      policy.WithOrigins("http://localhost:5223")
+                                            .AllowAnyHeader()
+                                            .AllowAnyMethod()
+                                            .AllowCredentials();
+                                  });
+            });
+
+
+            #endregion CORS Configuration
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
