@@ -1,5 +1,6 @@
 using ApplicationServices.Extensions;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
@@ -110,6 +111,17 @@ namespace ApplicationServices
 
 
             #endregion CORS Configuration
+
+            #region Form Configurations
+
+            builder.Services.Configure<FormOptions>(options =>
+            {
+                options.ValueLengthLimit = int.MaxValue;
+                options.MultipartBodyLengthLimit = int.MaxValue;
+                options.MemoryBufferThreshold = int.MaxValue;
+            });
+
+            #endregion Form Configurations
 
             var app = builder.Build();
 
