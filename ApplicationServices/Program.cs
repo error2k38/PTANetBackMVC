@@ -12,7 +12,7 @@ namespace ApplicationServices
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -125,17 +125,42 @@ namespace ApplicationServices
 
             var app = builder.Build();
 
+            #region HTTP Pipeline Configuration
+
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
+            if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
 
+            // Create a new scope for retrieving service instances
+            using (var scope = app.Services.CreateScope())
+            {
+                // Get the required service of type IMbaOptionsRepository from the service provider
+                var mbaOptionsRepository = scope.ServiceProvider.GetRequiredService<IMbaOptionsRepository>();
+                // Get the required service of type HttpClient from the service provider
+                var httpClient = scope.ServiceProvider.GetRequiredService<HttpClient>();
+                // Call the AddMbaOptionsDataBase method of the MbaDataBaseSaving class
+                // and pass the retrieved services as parameters
+                await MbaDataBaseSaving.AddMbaOptionsDataBase(mbaOptionsRepository, httpClient);
+            }
+
             app.UseAuthorization();
 
+            // Use HTTPS redirection middleware.
+            app.UseHttpsRedirection();
 
+            // Use application routing.
+            app.UseRouting();
+
+            //User a cors configuration.
+            app.UseCors(MyAllowcOrigins);
+
+            // Map controller routes
             app.MapControllers();
+
+            #endregion HTTP Pipeline Configuration
 
             app.UseExceptionHandler(errorApp =>
             {
