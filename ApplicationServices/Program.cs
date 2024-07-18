@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Diagnostics;
+
 namespace ApplicationServices
 {
     public class Program
@@ -26,6 +28,19 @@ namespace ApplicationServices
 
 
             app.MapControllers();
+
+            app.UseExceptionHandler(errorApp =>
+            {
+                errorApp.Run(async context =>
+                {
+                    var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
+                    var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(exceptionHandlerPathFeature.Error, $"An unhanded exception occurred: {exceptionHandlerPathFeature.Error.StackTrace}");
+
+                    context.Response.StatusCode = 500;
+                    await context.Response.WriteAsync("Server Internal Error");
+                });
+            });
 
             app.Run();
         }
