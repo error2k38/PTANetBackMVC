@@ -1,6 +1,8 @@
 using ApplicationServices.Extensions;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Repository.Context;
 
 namespace ApplicationServices
 {
@@ -41,6 +43,23 @@ namespace ApplicationServices
 
 
             #endregion Services Configuration
+
+            #region Database Configuration
+
+            // Add database connection string
+            var connectionString = Environment.GetEnvironmentVariable("DApplication_Connection", EnvironmentVariableTarget.Machine);
+            if (connectionString == null)
+                throw new ArgumentNullException(nameof(connectionString));
+
+            // Add singleton service for database connection string
+            builder.Services.AddSingleton<ConnectionString>(new ConfigurationDBConnectionString(connectionString));
+
+            // Add DbContext with SQL Server provider
+            builder.Services.AddDbContext<ApplicationContext>(options =>
+                options.UseSqlServer(connectionString));
+
+
+            #endregion Database Configuration
 
             var app = builder.Build();
 
