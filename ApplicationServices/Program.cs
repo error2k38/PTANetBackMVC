@@ -1,6 +1,7 @@
 using ApplicationServices.Extensions;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 using Repository.Abstract.MBAbstract;
 using Repository.Concrete;
@@ -70,6 +71,23 @@ namespace ApplicationServices
             builder.Services.AddScoped<IMbaOptionsRepository, ApplicationDBRepository>();
 
             #endregion Dependency Injection Configuration
+
+            #region Krestel Configuration
+
+            builder.WebHost.ConfigureKestrel(options =>
+            {
+                // Limita las conexiones concurrentes
+                options.Limits.MaxConcurrentConnections = 100;
+                options.Limits.MaxConcurrentUpgradedConnections = 100;
+                options.Limits.MaxRequestBodySize = 52428800;
+
+                // Configura Kestrel para escuchar en HTTP
+                options.ListenAnyIP(5223, op =>
+                {
+                    op.Protocols = HttpProtocols.Http1AndHttp2;
+                    op.UseConnectionLogging();
+                });
+            });
 
             var app = builder.Build();
 
