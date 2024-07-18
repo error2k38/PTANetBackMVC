@@ -1,4 +1,6 @@
+using ApplicationServices.Extensions;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ApplicationServices
 {
@@ -8,12 +10,37 @@ namespace ApplicationServices
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            #region Services Configuration
+
             // Add services to the container.
 
-            builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            // Add HttpClient
+            builder.Services.AddHttpClient();
+
+            // Add controllers
+            builder.Services.AddControllers(options =>
+            {
+                // Add a filter to validate model state
+                options.Filters.Add(new ValidateModelAttribute());
+            })
+            .AddJsonOptions(options =>
+            {
+                // Configure JSON serializer to include null values
+                options.JsonSerializerOptions.IgnoreNullValues = false;
+            });
+
+            // Configure API behavior options
+            builder.Services.Configure<ApiBehaviorOptions>(options =>
+            {
+                // Suppress automatic 400 responses when model state is invalid
+                options.SuppressModelStateInvalidFilter = true;
+            });
+
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+
+            #endregion Services Configuration
 
             var app = builder.Build();
 
