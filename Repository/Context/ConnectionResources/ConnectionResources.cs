@@ -30,5 +30,4 @@ namespace Repository.Context.ConnectionResources
         or KubernetesConnectionStrings for deployments in a Kubernetes cluster.
         */
     }
-
 }

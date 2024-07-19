@@ -1,5 +1,5 @@
-﻿using Mappers.DTOs;
-using Domain.Entities;
+﻿using Domain.Entities;
+using Mappers.DTOs;
 
 namespace Mapper.Mappers
 {

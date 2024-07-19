@@ -1,0 +1,18 @@
+﻿version: '3.4'
+services:
+  ApplicationServices:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - DApplication_Connection_Docker=Data Source=db,1433;Database=TEST;User Id=sa;Password=1QazxsW212*;MultipleActiveResultSets=true;
+    depends_on:
+      - db
+  db:
+    image: "mcr.microsoft.com/mssql/server:2019-latest"
+    container_name: SQL-SERVER-DOCKER
+    environment:
+      SA_PASSWORD: "1QazxsW212*"
+      ACCEPT_EULA: "Y"
+
+

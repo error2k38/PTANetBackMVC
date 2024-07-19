@@ -2,7 +2,6 @@ using ApplicationServices.Extensions;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 using Repository.Abstract.MBAbstract;
 using Repository.Concrete;
@@ -52,7 +51,9 @@ namespace ApplicationServices
             #region Database Configuration
 
             // Add database connection string
-            var connectionString = Environment.GetEnvironmentVariable(DeploymentResources.DockerConnectionStrings.GetDescription(), EnvironmentVariableTarget.Machine);
+            //var connectionString = Environment.GetEnvironmentVariable(DeploymentResources.DockerConnectionStrings.GetDescription(), EnvironmentVariableTarget.Machine);
+            var connectionString = Environment.GetEnvironmentVariable(DeploymentResources.DockerConnectionStrings.GetDescription());
+
             if (connectionString == null)
                 throw new ArgumentNullException(nameof(connectionString));
 
@@ -76,20 +77,20 @@ namespace ApplicationServices
 
             #region Krestel Configuration
 
-            builder.WebHost.ConfigureKestrel(options =>
-            {
-                // Limita las conexiones concurrentes
-                options.Limits.MaxConcurrentConnections = 100;
-                options.Limits.MaxConcurrentUpgradedConnections = 100;
-                options.Limits.MaxRequestBodySize = 52428800;
+            //builder.WebHost.ConfigureKestrel(options =>
+            //{
+            //    // Limita las conexiones concurrentes
+            //    options.Limits.MaxConcurrentConnections = 100;
+            //    options.Limits.MaxConcurrentUpgradedConnections = 100;
+            //    options.Limits.MaxRequestBodySize = 52428800;
 
-                // Configura Kestrel para escuchar en HTTP
-                options.ListenAnyIP(5223, op =>
-                {
-                    op.Protocols = HttpProtocols.Http1AndHttp2;
-                    op.UseConnectionLogging();
-                });
-            });
+            //    // Configura Kestrel para escuchar en HTTP
+            //    options.ListenAnyIP(32771, op =>
+            //    {
+            //        op.Protocols = HttpProtocols.Http1AndHttp2;
+            //        op.UseConnectionLogging();
+            //    });
+            //});
 
             #endregion Krestel Configuration
 
@@ -103,7 +104,7 @@ namespace ApplicationServices
                 options.AddPolicy(name: MyAllowcOrigins,
                                   policy =>
                                   {
-                                      policy.WithOrigins("http://localhost:5223")
+                                      policy.WithOrigins("http://localhost:32771")
                                             .AllowAnyHeader()
                                             .AllowAnyMethod()
                                             .AllowCredentials();

@@ -1,6 +1,6 @@
-﻿using Mappers.DTOs;
+﻿using Domain.Entities;
 using Mapper.Mappers;
-using Domain.Entities;
+using Mappers.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Repository.Abstract.MBAbstract;
 

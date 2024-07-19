@@ -58,7 +58,8 @@ namespace Repository.Context
             try
             {
                 base.OnConfiguring(optionsBuilder);
-                var connectionString = Environment.GetEnvironmentVariable(DeploymentResources.DockerConnectionStrings.GetDescription(), EnvironmentVariableTarget.Machine);
+                var connectionString = Environment.GetEnvironmentVariable(DeploymentResources.DockerConnectionStrings.GetDescription());
+                //var connectionString = Environment.GetEnvironmentVariable(DeploymentResources.DockerConnectionStrings.GetDescription(), EnvironmentVariableTarget.Machine);
                 if (connectionString == null)
                     throw new ArgumentNullException("The connection string cannot be null");
 
