@@ -1,5 +1,6 @@
 ﻿using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Repository.Context.ConnectionResources;
 using Repository.FluentConfigurations.MBAFluent;
 
 namespace Repository.Context
@@ -57,7 +58,7 @@ namespace Repository.Context
             try
             {
                 base.OnConfiguring(optionsBuilder);
-                var connectionString = Environment.GetEnvironmentVariable("DApplication_Connection", EnvironmentVariableTarget.Machine);
+                var connectionString = Environment.GetEnvironmentVariable(DeploymentResources.DockerConnectionStrings.GetDescription(), EnvironmentVariableTarget.Machine);
                 if (connectionString == null)
                     throw new ArgumentNullException("The connection string cannot be null");
 

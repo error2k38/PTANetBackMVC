@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Repository.Abstract.MBAbstract;
 using Repository.Concrete;
 using Repository.Context;
+using Repository.Context.ConnectionResources;
 
 namespace ApplicationServices
 {
@@ -51,7 +52,7 @@ namespace ApplicationServices
             #region Database Configuration
 
             // Add database connection string
-            var connectionString = Environment.GetEnvironmentVariable("DApplication_Connection", EnvironmentVariableTarget.Machine);
+            var connectionString = Environment.GetEnvironmentVariable(DeploymentResources.DockerConnectionStrings.GetDescription(), EnvironmentVariableTarget.Machine);
             if (connectionString == null)
                 throw new ArgumentNullException(nameof(connectionString));
 
