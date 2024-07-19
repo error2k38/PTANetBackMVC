@@ -43,10 +43,10 @@ namespace PTNetBackMVC.Controllers
 
             if (mbasOptions is null)
             {
-                var msg = "Has error occurred";
-                _logger.LogError($"{nameof(GetMbasOptions)} -> {msg}");
+                var errorMessage = "Has error occurred";
+                _logger.LogError($"{nameof(GetMbasOptions)} -> {errorMessage}");
                 _mbaOptionsRepository.RollbackTransaction();
-                return BadRequest(new ResponseSingleErrorDTO { IsSuccessful = false, Error = msg });
+                return BadRequest(new ResponseSingleErrorDTO { IsSuccessful = false, Error = errorMessage });
             }
 
             var mbasOptionsDto = mbasOptions.Select(mbaOptions => mbaOptions.Map());
@@ -73,10 +73,10 @@ namespace PTNetBackMVC.Controllers
 
             if (mbaOptions is null)
             {
-                var msg = "MbaOptions not found";
-                _logger.LogError($" {nameof(GetMbaOptionsById)} -> {msg}");
+                var errorMessage = "MbaOptions not found";
+                _logger.LogError($" {nameof(GetMbaOptionsById)} -> {errorMessage}");
                 _mbaOptionsRepository.RollbackTransaction();
-                return NotFound(new ResponseSingleErrorDTO { IsSuccessful = false, Error = msg });
+                return NotFound(new ResponseSingleErrorDTO { IsSuccessful = false, Error = errorMessage });
             }
 
             var mbaOptionsDto = mbaOptions.Map();
@@ -107,20 +107,20 @@ namespace PTNetBackMVC.Controllers
             if (allMbaOptions.Any(mbaOptions => mbaOptions.Country.Equals(request.Country, StringComparison.OrdinalIgnoreCase)
                 || mbaOptions.CountryCode.Equals(request.CountryCode, StringComparison.OrdinalIgnoreCase)))
             {
-                var msg = "There is already an entity with that data";
-                _logger.LogError($"{nameof(CreateMbaOptions)} -> {msg}");
+                var errorMessage = "There is already an entity with that data";
+                _logger.LogError($"{nameof(CreateMbaOptions)} -> {errorMessage}");
                 _mbaOptionsRepository.RollbackTransaction();
-                return BadRequest(new ResponseSingleErrorDTO { IsSuccessful = false, Error = msg });
+                return BadRequest(new ResponseSingleErrorDTO { IsSuccessful = false, Error = errorMessage });
             }
 
             var mbaOtions = await _mbaOptionsRepository.CreateMbaOptionsAsync(request.Country, request.CountryCode);
 
             if (mbaOtions is null)
             {
-                var msg = "Has error occurred";
-                _logger.LogError($"{nameof(CreateMbaOptions)} -> {msg}");
+                var errorMessage = "Has error occurred";
+                _logger.LogError($"{nameof(CreateMbaOptions)} -> {errorMessage}");
                 _mbaOptionsRepository.RollbackTransaction();
-                return BadRequest(new ResponseSingleErrorDTO { IsSuccessful = false, Error = msg });
+                return BadRequest(new ResponseSingleErrorDTO { IsSuccessful = false, Error = errorMessage });
             }
 
             var mbaOptionsDto = mbaOtions.Map();
@@ -150,11 +150,11 @@ namespace PTNetBackMVC.Controllers
 
             if (mbaOptionsListDtos is null)
             {
-                var msg = "Has error occurred";
-                _logger.LogError($"{nameof(AddMbaOptionsByRange)} -> {msg}");
+                var errorMessage = "Has error occurred";
+                _logger.LogError($"{nameof(AddMbaOptionsByRange)} -> {errorMessage}");
             }
 
-            await AddMbaOptionsTodatabase(mbaOptionsListDtos);
+            await AddMbaOptionsToDatabase(mbaOptionsListDtos);
 
             _mbaOptionsRepository.CommitTransaction();
             return Ok(mbaOptionsListDtos);
@@ -176,10 +176,10 @@ namespace PTNetBackMVC.Controllers
             var oldMbaOptions = await _mbaOptionsRepository.GetMbaOptionsByIdAsync(request.MbaOptionsId);
             if (oldMbaOptions is null)
             {
-                var msg = "Mba options not found";
-                _logger.LogError($"{nameof(UpdateMbaOptions)} -> {msg}");
+                var errorMessage = "Mba options not found";
+                _logger.LogError($"{nameof(UpdateMbaOptions)} -> {errorMessage}");
                 _mbaOptionsRepository.RollbackTransaction();
-                return NotFound(new ResponseSingleErrorDTO { IsSuccessful = false, Error = msg });
+                return NotFound(new ResponseSingleErrorDTO { IsSuccessful = false, Error = errorMessage });
             }
 
             var allMbaOptions = await _mbaOptionsRepository.GetMbasOptionsAsync();
@@ -188,10 +188,10 @@ namespace PTNetBackMVC.Controllers
                || mbaOptions.CountryCode.Equals(request.CountryCode, StringComparison.OrdinalIgnoreCase))
                 && !oldMbaOptions.Country.Equals(request.Country, StringComparison.OrdinalIgnoreCase))
             {
-                var msg = "There is already an entity with that data";
-                _logger.LogError($"{nameof(UpdateMbaOptions)} -> {msg}");
+                var errorMessage = "There is already an entity with that data";
+                _logger.LogError($"{nameof(UpdateMbaOptions)} -> {errorMessage}");
                 _mbaOptionsRepository.RollbackTransaction();
-                return BadRequest(new ResponseSingleErrorDTO { IsSuccessful = false, Error = msg });
+                return BadRequest(new ResponseSingleErrorDTO { IsSuccessful = false, Error = errorMessage });
             }
 
             oldMbaOptions.Update(request);
@@ -221,10 +221,10 @@ namespace PTNetBackMVC.Controllers
             var mbaOptions = await _mbaOptionsRepository.GetMbaOptionsByIdAsync(id);
             if (mbaOptions is null)
             {
-                var msg = "Mba options not found";
-                _logger.LogError($"{nameof(DeleteMbaOptions)} -> {msg}");
+                var errorMessage = "Mba options not found";
+                _logger.LogError($"{nameof(DeleteMbaOptions)} -> {errorMessage}");
                 _mbaOptionsRepository.RollbackTransaction();
-                return NotFound(new ResponseSingleErrorDTO { IsSuccessful = false, Error = msg });
+                return NotFound(new ResponseSingleErrorDTO { IsSuccessful = false, Error = errorMessage });
             }
 
             await _mbaOptionsRepository.DeleteMbaOptionsAsync(mbaOptions);
@@ -242,7 +242,7 @@ namespace PTNetBackMVC.Controllers
         /// </summary>
         /// <param name="mbaOptionsListDtos">The list of MBA options to add.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        private async Task AddMbaOptionsTodatabase(List<MbaOptionsSerializableDto>? mbaOptionsListDtos)
+        private async Task AddMbaOptionsToDatabase(List<MbaOptionsSerializableDto>? mbaOptionsListDtos)
         {
             _mbaOptionsRepository.BeginTransaction();
             var _mbaRepository = (IMbaRepository)_mbaOptionsRepository;

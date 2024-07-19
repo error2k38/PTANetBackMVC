@@ -43,3 +43,16 @@ Se valorará positivamente (pero no es obligatorio cumplir con todos estos punto
 No hay restricciones específicas sobre la estructura del repositorio. Los candidatos son libres de organizar su código de la manera que consideren más apropiada. Sin embargo, se recomienda seguir las convenciones de nomenclatura y estructura de proyecto estándar.
 
 ¡Buena suerte!
+
+## Respuesta a la problemática planteada:
+
+1. Capa de Dominio: Se define la capa de dominio. Aquí es donde se modela el dominio del negocio, definiendo todas las entidades, los objetos de valor, los eventos de dominio, las interfaces, los tipos y las excepciones que son específicas del dominio del negocio.
+2. Capa de Repositorio: Una vez definido el dominio, se implementan los repositorios. Los repositorios son los encargados de manejar la persistencia de las entidades del dominio. En esta capa, se hace uso del patrón de diseño de repositorio para abstraer las operaciones de la base de datos. Además, se configuran los valores y características de las propiedades en el Fluent de esta capa para una mejor organización y limpieza.
+3. Capa de Mapeo (Mapper): A continuación, se implementa la capa de mapeo. Esta capa es responsable de convertir los objetos de dominio en DTOs (Data Transfer Objects) y viceversa. Los DTOs son necesarios para transferir datos entre procesos, lo que ayuda a reducir el número de llamadas al servidor y mejora el rendimiento de la aplicación.
+4. Capa de Servicios de Aplicación: Finalmente, se implementa la capa de servicios de aplicación. Los servicios de aplicación son los encargados de coordinar las operaciones de alto nivel que implican a varias entidades del dominio.
+
+## Manejo de errores
+
+1. Manejo de Excepciones: Se evita lanzar excepciones excesivas en los endpoints. En su lugar, se hace uso de un middleware que se encarga de manejar las excepciones que no son manejadas por el usuario. Este middleware captura cualquier excepción no manejada y devuelve una respuesta HTTP adecuada. Esto mejora la robustez de la aplicación y proporciona una mejor experiencia al usuario. Las excepciones se utilizan de manera estratégica y se reservan para situaciones críticas y específicas. El uso descontrolado del manejo y lanzamiento de excepciones puede llevar a problemas de rendimiento y dificultades en la depuración.
+2. Uso de ILogger: Para tener un control de los errores producidos, se hace uso de ILogger, una interfaz proporcionada por ASP.NET Core. ILogger permite registrar mensajes en una variedad de niveles de gravedad (Información, Advertencia, Error, etc.) y puede ser configurado para registrar mensajes a diferentes destinos (como la consola, un archivo, etc.). Esto es especialmente útil para el seguimiento de errores y la depuración.
+
